@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="horizontal"
+        android:background="@color/colorPrimary"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:text="@string/connect_instruction"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:padding="25dp"
+            android:textSize="30sp"
+            android:textColor="@color/colorWhite"
+            android:layout_height="wrap_content"
+            android:gravity="center_horizontal" />
+    </LinearLayout>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:id="@+id/start"
+        android:textSize="30sp"
+        android:text="@string/searching_for_network"
+        android:layout_gravity="center"
+        android:layout_margin="50dp"
+        android:background="@drawable/circular_background"/>
+
+    <com.google.android.material.button.MaterialButton
+        android:layout_width="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingRight="10dp"
+        android:layout_height="70dp"
+        android:text="@string/start"
+        android:id="@+id/start_button"
+        android:textSize="20sp"
+        android:layout_gravity="center"
+        android:layout_margin="50dp"
+        android:paddingStart="10dp" />
+
+</LinearLayout>
