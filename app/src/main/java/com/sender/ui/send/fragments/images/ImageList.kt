@@ -28,6 +28,7 @@ import kotlinx.coroutines.launch
 class ImageList : Fragment(){
     private var tracker: SelectionTracker<Long>? = null
     private var imageList = ArrayList<RvImagesItems>()
+    private   val viewAdapter = ImageListAdapter(ArrayList())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -35,7 +36,7 @@ class ImageList : Fragment(){
     ): View? {
         val viewLayout =  inflater.inflate(R.layout.fragment_image_list, container, false)
         val viewManager = GridLayoutManager(context,3)
-        val viewAdapter = ImageListAdapter(ArrayList())
+
 
         if (savedInstanceState != null) {
             tracker?.onRestoreInstanceState(savedInstanceState);
@@ -147,6 +148,12 @@ class ImageList : Fragment(){
         super.onSaveInstanceState(outState)
         tracker?.onSaveInstanceState(outState);
         outState.putSerializable("image_data",imageList)
+    }
+
+    fun clearTracker(){
+        try {
+            viewAdapter.tracker?.clearSelection()
+        }catch(e: Exception){}
     }
 
 }

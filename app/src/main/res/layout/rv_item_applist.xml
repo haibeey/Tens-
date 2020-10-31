@@ -5,13 +5,13 @@
     android:orientation="vertical"
     android:padding="10dp"
     android:layout_margin="1dp"
+    android:background="@drawable/app_item_selected"
     android:layout_height="wrap_content">
-    <ImageButton
+    <ImageView
         android:layout_width="70dp"
         android:id="@+id/image_button"
         android:layout_gravity="center"
         android:layout_height="70dp"
-        android:background="@color/colorWhite"
         android:contentDescription="@string/todo" />
     <TextView
         android:id="@+id/app_name"

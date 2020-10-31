@@ -26,6 +26,7 @@ import kotlinx.coroutines.launch
 class VideoList : Fragment() {
     private var tracker: SelectionTracker<Long>? = null
     private var videoList = ArrayList<RvVideosItems>()
+    private   val viewAdapter = VideoListAdapter(ArrayList())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -125,5 +126,11 @@ class VideoList : Fragment() {
         super.onSaveInstanceState(outState)
         tracker?.onSaveInstanceState(outState)
         outState.putSerializable("video_data",videoList)
+    }
+
+    fun clearTracker(){
+        try {
+            viewAdapter.tracker?.clearSelection()
+        }catch(e: Exception){}
     }
 }

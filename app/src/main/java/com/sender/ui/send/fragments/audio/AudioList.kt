@@ -29,6 +29,7 @@ class AudioList : Fragment() {
 
     private var tracker: SelectionTracker<Long>? = null
     private var audioList = ArrayList<RvAudioItems>()
+    private  val viewAdapter = AudioListAdapter(ArrayList())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -36,7 +37,7 @@ class AudioList : Fragment() {
     ): View? {
         val viewLayout =  inflater.inflate(R.layout.fragment_audio_list, container, false)
         val viewManager = LinearLayoutManager(context)
-        val viewAdapter = AudioListAdapter(ArrayList())
+
 
         if (savedInstanceState != null) {
             tracker?.onRestoreInstanceState(savedInstanceState);
@@ -162,6 +163,12 @@ class AudioList : Fragment() {
         super.onSaveInstanceState(outState)
         tracker?.onSaveInstanceState(outState)
         outState.putSerializable("audio_data",audioList)
+    }
+
+    fun clearTracker(){
+        try {
+            viewAdapter.tracker?.clearSelection()
+        }catch(e: Exception){}
     }
 
 }

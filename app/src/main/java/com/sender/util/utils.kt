@@ -2,9 +2,10 @@ package com.sender.util
 
 class Utils{
     companion object{
+        var testing  = false
         fun <T> printItems(vararg ts: T){
             for (t in ts){
-                print("$t-")
+                print("$t ")
             }
             print("\n")
         }

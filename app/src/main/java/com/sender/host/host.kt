@@ -12,7 +12,7 @@ import kotlin.collections.ArrayList
 
 
 class Host(
-    private val itemsToSend : ArrayList<TransferFile>,
+    private var itemsToSend : ArrayList<TransferFile>,
     private val context: Context,
     ip: String,
     port: Int
@@ -38,9 +38,14 @@ class Host(
         broker = Broker(hostSocket.accept(),itemsToSend,context,"HOST")
     }
 
-    fun send(){
+    fun updateSendingItems(IS: ArrayList<TransferFile>){
+        broker?.updateItemsToSend(IS)
+    }
+
+    fun send(IS : ArrayList<TransferFile>){
+        itemsToSend = IS
         if (broker!=null){
-            broker?.send()
+            broker?.send(itemsToSend)
         }
     }
 

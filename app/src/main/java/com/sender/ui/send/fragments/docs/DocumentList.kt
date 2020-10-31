@@ -24,14 +24,13 @@ class DocumentList : Fragment() {
 
     private var tracker: SelectionTracker<Long>? = null
     private var docList = ArrayList<RvDocItems>()
-
+    private   val viewAdapter = DocListAdapter(ArrayList())
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         val viewLayout =  inflater.inflate(R.layout.fragment_document_list, container, false)
         val viewManager = LinearLayoutManager(context)
-        val viewAdapter = DocListAdapter(ArrayList())
 
         if (savedInstanceState != null) {
             tracker?.onRestoreInstanceState(savedInstanceState);
@@ -146,4 +145,9 @@ class DocumentList : Fragment() {
     }
 
 
+    fun clearTracker(){
+        try {
+            viewAdapter.tracker?.clearSelection()
+        }catch(e: Exception){}
+    }
 }

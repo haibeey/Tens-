@@ -24,31 +24,41 @@ private val TAB_TITLES = arrayOf(
     R.string.tab_text_7
 )
 
-class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
+class SectionsPagerAdapter(private val context: Context,
+                           fm: FragmentManager,
+                           private val sentList: SentList,
+                           private val receiveList: ReceiveList
+) :
     FragmentPagerAdapter(fm) {
+
+    private val appList = AppList()
+    private val videoList = VideoList()
+    private val documentList = DocumentList()
+    private val imageList = ImageList()
+    private val audioList = AudioList()
 
     override fun getItem(position: Int): Fragment {
         when (position) {
             0->{
-                return AppList()
+                return appList
             }
             1->{
-                return VideoList()
+                return videoList
             }
             2->{
-                return DocumentList()
+                return documentList
             }
             3->{
-                return ImageList()
+                return imageList
             }
             4->{
-                return AudioList()
+                return audioList
             }
             5->{
-                return SentList()
+                return sentList
             }
             6->{
-                return ReceiveList()
+                return receiveList
             }
             else->{
                 return PlaceholderFragment.newInstance(position + 1)
@@ -62,5 +72,13 @@ class SectionsPagerAdapter(private val context: Context, fm: FragmentManager) :
 
     override fun getCount(): Int {
         return TAB_TITLES.size
+    }
+
+    fun clearTracker(){
+        imageList.clearTracker()
+        appList.clearTracker()
+        audioList.clearTracker()
+        documentList.clearTracker()
+        videoList.clearTracker()
     }
 }

@@ -1,6 +1,8 @@
 package com.sender.models
 
+import android.app.Activity
 import android.content.Context
+import android.util.Log
 import com.sender.util.*
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.async
@@ -10,10 +12,10 @@ import java.net.Socket
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
-val MAX_BYTE_SEND_RECEIVE_SIZE = 1000000
+const val MAX_BYTE_SEND_RECEIVE_SIZE = 1000000
 
 class Broker(private val socket : Socket,
-             val itemsToSend : ArrayList<TransferFile>,
+             var itemsToSend : ArrayList<TransferFile>,
              val context : Context,
              private val type : String
 ){
@@ -40,6 +42,7 @@ class Broker(private val socket : Socket,
         }
     }
 
+
     fun getSending():ArrayList<FileTransmission>{
         return sending
     }
@@ -48,7 +51,26 @@ class Broker(private val socket : Socket,
         return receiving
     }
 
-    fun send(){
+    fun updateItemsToSend(IS : ArrayList<TransferFile>){
+        itemsToSend = IS
+    }
+    fun send(IS : ArrayList<TransferFile>){
+        (context as Activity).runOnUiThread {
+            Log.e("sending here",socket.toString())
+        }
+        itemsToSend = IS
+        itemsToSend.forEach {
+            sending.add(
+                FileTransmission(
+                    sizeSent = 0,
+                    sending = true,
+                    sizeToSend = it.size,
+                    name = it.name,
+                    mimeType = it.mimeType
+                )
+            )
+        }
+
         sendTransferList()
         var index = 0
         while (itemsToSend.isNotEmpty()){
@@ -82,6 +104,7 @@ class Broker(private val socket : Socket,
             )
 
             var dataSize = FileUtils.fetchFileSize(itemSending.uri,context)
+
             val fileReader = FileReader(itemSending.uri,context)
             while (dataSize>0){
                 var goingToSend = MAX_BYTE_SEND_RECEIVE_SIZE
@@ -89,13 +112,11 @@ class Broker(private val socket : Socket,
                     goingToSend = dataSize.toInt()
                 }
                 data = ByteBuffer.allocate(goingToSend)
-                while (fileReader.canRead() && dataSize>0){
-                    val sb = fileReader.take(goingToSend)
-                    Utils.printItems(String(sb),"?",type,"sends")
-                    sending[index].sizeSent+=sb.size
-                    data.put(sb)
-                    dataSize-=sb.size
-                }
+                val sb = fileReader.take(goingToSend)
+
+                sending[index].sizeSent+=sb.size
+                data.put(sb)
+                dataSize-=sb.size
                 outPutStream.write(
                     data.array()
                 )
@@ -138,10 +159,12 @@ class Broker(private val socket : Socket,
     }
 
     fun receive(){
-        val inputStream = socket.getInputStream()
         var index = 0
-
+        (context as Activity).runOnUiThread {
+            Log.e("just see here",socket.toString())
+        }
         while (socket.isConnected){
+            val inputStream = socket.getInputStream()
             val sizeByteArr = ByteArray(4)
             val  commandByteArr= ByteArray(4)
             if (inputStream.read(sizeByteArr)!=4){
@@ -167,30 +190,34 @@ class Broker(private val socket : Socket,
                     if(inputStream.read(entityArr)!=size){
                         receiving[index].sending = false
                     }
-                    val entity = conversion.getGSONDeSerializer().fromJson(entityArr.toString(Charset.defaultCharset()),TransferEntity::class.java)
-                    val fileWriter = FileWriter(entity.item.uri,context,entity.item.mimeType)
+                    val entity = conversion.getGSONDeSerializer().fromJson(
+                        entityArr.toString(Charset.defaultCharset()),
+                        TransferEntity::class.java
+                    )
+
+                    val fileWriter = FileWriter(entity.item.name,entity.item.mimeType,context)
 
                     while (entity.entitySize>0){
                         var goingToReceive = MAX_BYTE_SEND_RECEIVE_SIZE
                         if (entity.entitySize<MAX_BYTE_SEND_RECEIVE_SIZE){
                             goingToReceive = entity.entitySize.toInt()
                         }
+
                         val data =  ByteArray(size = goingToReceive)
-                        while (goingToReceive>0){
-                            val sizeRead = inputStream.read(data)
-                            fileWriter.put(data)
-                            Utils.printItems(String(data),"?",type,"received")
-                            receiving[index].sizeSent+=sizeRead
-                            entity.entitySize-=sizeRead
-                            goingToReceive-=sizeRead
-                        }
+
+                        val sizeRead = inputStream.read(data)
+                        val readData = data.sliceArray(0 until sizeRead)
+                        fileWriter.put(readData)
+                        receiving[index].sizeSent+=sizeRead
+                        entity.entitySize-=sizeRead
                     }
                     index++
                     if(index>=receiving.size){
                         finishReceiving = true
-                        receiving.clear()
+                        if (finishReceiving && Utils.testing){
+                            return
+                        }
                     }
-
                 }
                 Defaults.Companion.Commands.TRANSFERLIST->{
                     val itemList = ByteArray(size = size)

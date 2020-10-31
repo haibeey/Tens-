@@ -1,17 +1,24 @@
 package com.sender.models
 
+import android.app.Activity
 import android.content.Context
-import android.net.Uri
+import android.util.Log
+import com.sender.util.FileUtils
+import com.sender.util.Utils
 import java.io.File
-import java.io.InputStream
 import java.io.OutputStream
 
-class FileWriter(val uri: Uri,context: Context,mimeType: String){
+class FileWriter(val name: String,mimeType: String,context : Context){
     private var stream : OutputStream?
     private var folderPath : String = getFolderPath(mimeType)
     init {
-        val resolver = context.applicationContext.contentResolver
-        stream = resolver.openOutputStream(uri)
+        val file = File(folderPath+name)
+
+        Utils.printItems(file.name,file.absolutePath)
+
+        file.createNewFile()
+
+        stream = file.outputStream()
     }
 
 
@@ -20,7 +27,7 @@ class FileWriter(val uri: Uri,context: Context,mimeType: String){
     }
 
     private fun getFolderPath(mimeType: String):String{
-        var folder = "/sdcard/Tensõ/"
+        var folder = FileUtils.dir
         when (mimeType){
             "application/vnd.android.package-archive"->{
                 folder = "/sdcard/Tensõ/App/"

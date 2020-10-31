@@ -47,7 +47,9 @@ class DocListAdapter(private val docList: ArrayList<RvDocItems>) :
 
         return BaseViewHolder(itemView)
     }
-
+    fun getSelectionTracker():SelectionTracker<Long>?{
+        return  tracker
+    }
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val rvItems = docList[position]
 

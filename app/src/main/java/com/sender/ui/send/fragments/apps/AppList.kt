@@ -26,6 +26,7 @@ import java.io.File
 class AppList : Fragment() {
     private var tracker: SelectionTracker<Long>? = null
     private var  allList =  ArrayList<RvAppItems>()
+    private val viewAdapter = AppListAdapter(ArrayList())
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -34,7 +35,7 @@ class AppList : Fragment() {
 
         val viewLayout = inflater.inflate(R.layout.fragment_app_list, container, false)
         val viewManager = GridLayoutManager(context,4)
-        val viewAdapter = AppListAdapter(ArrayList())
+
         if (savedInstanceState != null) {
             tracker?.onRestoreInstanceState(savedInstanceState);
         }
@@ -57,14 +58,13 @@ class AppList : Fragment() {
                         }
 
                         val rvAppItems = RvAppItems()
-                        rvAppItems.appName = pm.getApplicationLabel(packageInfo.applicationInfo).toString()
+                        rvAppItems.appName = "${pm.getApplicationLabel(packageInfo.applicationInfo)}.apk"
 
                         rvAppItems.packageName = packageInfo.packageName
                         rvAppItems.uri =  Uri.fromFile(File(packageInfo.applicationInfo.publicSourceDir))
 
-                        appList.add(
-                            rvAppItems
-                        )
+                        appList.add(rvAppItems)
+
                         if (appList.size%50==0){
                             appList.sortBy { it.appName }
                             activity?.runOnUiThread {
@@ -108,11 +108,8 @@ class AppList : Fragment() {
             ).withSelectionPredicate(
                 SelectionPredicates.createSelectAnything()
             ).build()
-
             viewAdapter.tracker = tracker
-
         }
-
         return  viewLayout
     }
 
@@ -122,4 +119,9 @@ class AppList : Fragment() {
         outState.putSerializable("app_data",allList)
     }
 
+    fun clearTracker(){
+        try {
+            viewAdapter.tracker?.clearSelection()
+        }catch(e: Exception){}
+    }
 }

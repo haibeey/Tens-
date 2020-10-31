@@ -27,10 +27,11 @@ class FileReader(uri : Uri, context: Context){
         val res = ByteArray(count)
         try {
             if (stream==null)return res
-            stream!!.read(res,offset,count)
-            offset+=count
+            val off =stream!!.read(res,offset,count)
+            offset+=off
         }catch (e : Exception){
             res.fill(65)
+            offset+=res.size
             return  res
         }
         return  res

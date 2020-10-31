@@ -40,6 +40,10 @@ class AppListAdapter(private val appList: ArrayList<RvAppItems>) :
         notifyDataSetChanged()
     }
 
+    fun getSelectionTracker():SelectionTracker<Long>?{
+        return  tracker
+    }
+
     override fun onCreateViewHolder(parent: ViewGroup,
                                     viewType: Int): BaseViewHolder {
         val itemView = LayoutInflater.from(parent.context)

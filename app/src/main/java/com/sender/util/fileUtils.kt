@@ -9,6 +9,7 @@ import androidx.core.net.toFile
 class FileUtils{
     companion object{
 
+        var dir = "/sdcard/Tensõ/"
         fun fetchFileSize(uri : Uri,context: Context):Long{
             val returnCursor  = context.contentResolver.query(uri, null, null, null, null)
             val sizeIndex  = returnCursor?.getColumnIndex(OpenableColumns.SIZE)

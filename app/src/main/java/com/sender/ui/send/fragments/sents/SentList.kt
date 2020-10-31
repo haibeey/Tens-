@@ -5,14 +5,16 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 
 import com.sender.R
 
 
 class SentList : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
+
+
+    private val sendingAdapter = SendingAdapters()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -24,7 +26,19 @@ class SentList : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sent_list, container, false)
+        val viewLayout = inflater.inflate(R.layout.fragment_sent_list, container, false)
+        val linearLayoutManager = LinearLayoutManager(viewLayout.context)
+
+        viewLayout.findViewById<RecyclerView>(R.id.sending_list).apply {
+            layoutManager = linearLayoutManager
+            adapter = sendingAdapter
+        }
+        return  viewLayout
+
+    }
+
+    fun getSendingAdapter():SendingAdapters{
+        return  sendingAdapter
     }
 
 }

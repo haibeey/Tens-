@@ -14,6 +14,7 @@ import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.core.net.toUri
 import androidx.lifecycle.MutableLiveData
 import com.google.android.material.button.MaterialButton
 import com.sender.ui.send.SendActivity
@@ -49,6 +50,7 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ),100)
 
+        Log.e("wtf","na")
 
         val img = findViewById<MaterialButton>(R.id.start)
         scaleDown = AnimationUtils.loadAnimation(
@@ -60,9 +62,6 @@ class MainActivity : AppCompatActivity() {
 
         startConnecting()
 
-        val f = File("/sdcard/")
-
-        Log.e("can view",f.absolutePath)
     }
 
     private fun requestPermission(permission: Array<String>, requestCode: Int) :Boolean{
@@ -111,7 +110,6 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun joinConnection(){
-
         fun joinThread():Thread{
             return Thread{
                 clientWaiting = true

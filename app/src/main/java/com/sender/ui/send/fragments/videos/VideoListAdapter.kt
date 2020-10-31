@@ -44,6 +44,10 @@ class VideoListAdapter(private val videoList: ArrayList<RvVideosItems>) :
         return BaseViewHolder(itemView)
     }
 
+    fun getSelectionTracker():SelectionTracker<Long>?{
+        return  tracker
+    }
+
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val rvItems = videoList[position]
         Glide.with(holder.view)

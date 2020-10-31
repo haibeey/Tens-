@@ -10,7 +10,7 @@ import java.net.InetSocketAddress
 import java.net.Socket
 
 class Client(
-    private val itemsToSend : ArrayList<TransferFile>,
+    private var itemsToSend : ArrayList<TransferFile>,
     private val context: Context,
     ip: String,
     port: Int
@@ -19,7 +19,7 @@ class Client(
     private var broker: Broker? = null
 
     init {
-        clientSocket.connect(InetSocketAddress(ip, port))
+        clientSocket.connect(InetSocketAddress(ip, port),3000)
         startListening()
     }
 
@@ -36,9 +36,10 @@ class Client(
         broker = Broker(clientSocket,itemsToSend,context,"CLIENT")
     }
 
-    fun send(){
+    fun send(IS : ArrayList<TransferFile>){
+        itemsToSend = IS
         if (broker!=null){
-            broker?.send()
+            broker?.send(itemsToSend)
         }
     }
 
@@ -47,6 +48,10 @@ class Client(
         return  getBroker()?.getSending()
     }
 
+
+    fun updateSendingItems(IS: ArrayList<TransferFile>){
+        broker?.updateItemsToSend(IS)
+    }
 
     fun getReceiving(): ArrayList<FileTransmission>? {
         return  getBroker()?.getReceiving()

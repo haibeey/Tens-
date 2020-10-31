@@ -35,33 +35,46 @@ class HostClientTest {
 
         val context: Context = ApplicationProvider.getApplicationContext()
 
-        val file = File("src/test/java/com/sender/a.in")
+        FileUtils.dir = "src/"
+
+        val file = File("src/test/java/com/sender/DualSpace.apk")
+
         val tfs = ArrayList<TransferFile>()
 
         tfs.add(
             TransferFile(
-                name = "a.in",
+                name = "DualSpace.apk",
                 uri = Uri.fromFile(file),
                 size = FileUtils.fetchFileSize(Uri.fromFile(file),context),
-                type = "doc",
+                type = "apk",
                 mimeType = ""
             )
         )
+        val result =ArrayList<TransferFile>()
+        tfs.forEach {
+            result.add(it)
+        }
 
-        Thread{
+        Utils.testing = true
+        val thread1 = Thread{
             val h = Host(tfs,context,"127.0.0.1",6789)
-            h.send()
-            h.receive()
-        }.start()
-        Thread.sleep(500)
+            h.send(result)
+        }
+        thread1.start()
 
+        Thread.sleep(1000)
         val c = Client(tfs,context,"127.0.0.1",6789)
 
-        Thread{
+        val thread2=Thread{
             c.receive()
-        }.start()
+        }
+        thread2.start()
 
-        Thread.sleep(2000)
+        thread1.join()
+        thread2.join()
+
         Assert.assertEquals("${c.getBroker()?.failedSending()!!}","false")
+        Utils.printItems(file.length(),File("src/DualSpace.apk").length(),FileUtils.fetchFileSize(Uri.fromFile(file),context))
+        Assert.assertTrue(file.length()==File("src/DualSpace.apk").length())
     }
 }
