@@ -11,7 +11,7 @@ import java.lang.Exception
 
 
 class FileReader(uri : Uri, context: Context){
-    private var stream : InputStream?
+    private val stream : InputStream?
     init {
         val resolver = context.applicationContext.contentResolver
         stream = resolver.openInputStream( uri)
@@ -24,14 +24,21 @@ class FileReader(uri : Uri, context: Context){
         return availableToRead
     }
     fun take(count : Int):ByteArray{
-        val res = ByteArray(count)
+        var res = ByteArray(count)
+//        if (stream==null)return res
+//        val off =stream.read(res,offset,count)
+//        offset+=off
+//        res = res.sliceArray(0 until offset)
+//        return  res
         try {
             if (stream==null)return res
-            val off =stream!!.read(res,offset,count)
+            val off =stream.read(res,offset,count)
             offset+=off
+            res = res.sliceArray(0 until offset)
         }catch (e : Exception){
             res.fill(65)
             offset+=res.size
+            Utils.printItems(e)
             return  res
         }
         return  res

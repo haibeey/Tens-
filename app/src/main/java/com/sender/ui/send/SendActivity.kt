@@ -1,47 +1,57 @@
 package com.sender.ui.send
 
+import android.content.Context
 import android.os.Bundle
 import android.util.Log
-import com.google.android.material.tabs.TabLayout
-import androidx.viewpager.widget.ViewPager
+import android.view.*
+import android.widget.ImageView
+import android.widget.RelativeLayout
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import androidx.viewpager.widget.ViewPager
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.tabs.TabLayout
 import com.sender.R
 import com.sender.client.Client
 import com.sender.host.Host
+import com.sender.models.FileTransmission
 import com.sender.models.TransferFile
-import com.sender.ui.send.fragments.received.ReceiveList
-import com.sender.ui.send.fragments.sents.SentList
-import com.sender.util.Utils
+import com.sender.ui.send.fragments.received.ReceivingAdapter
+import com.sender.ui.send.fragments.sents.SendingAdapters
 import com.sender.util.networkUtils
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.channels.ticker
-import kotlinx.coroutines.launch
 import java.io.File
-import java.lang.Exception
 import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.system.exitProcess
 
+
 class SendActivity : AppCompatActivity() {
 
     private val thingsToSend = mutableSetOf<TransferFile>()
-    private val sendListFragment = SentList()
-    private val receiveListFragment = ReceiveList()
-    var host1 : Host? = null
-    var host2 : Host? = null
+    private var host1 : Host? = null
+    private var host2 : Host? = null
 
-    var client1 : Client? = null
-    var client2 : Client? = null
+    private var client1 : Client? = null
+    private var client2 : Client? = null
+
+    private val MIN_SWIPPING_DISTANCE = 2
+
+    private lateinit var sendingReceivingView : View
 
     private val sectionsPagerAdapter = SectionsPagerAdapter(
         this,
-        supportFragmentManager,
-        sendListFragment,
-        receiveListFragment
+        supportFragmentManager
     )
+
+    private val sendingAdapter = SendingAdapters()
+    private val receivingAdapter = ReceivingAdapter()
+
+    private var lastScroll = System.currentTimeMillis()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,17 +59,23 @@ class SendActivity : AppCompatActivity() {
 
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
-        viewPager.offscreenPageLimit = 7
+        viewPager.offscreenPageLimit = 5
         val tabs: TabLayout = findViewById(R.id.tabs)
         tabs.setupWithViewPager(viewPager)
 
+        sendingReceivingView = (getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater).
+                                inflate(R.layout.sending_reciever_layout, null, false)
 
+        val gesture = GestureDetector(this,gestureDetector())
+        sendingReceivingView.setOnTouchListener { _, event ->
+            gesture.onTouchEvent(event)
+            true
+        }
 
         var updated = true
         var host = true
 
         mkdir()
-
         when {
             networkUtils.isMobileHotspot(this) -> { }
             networkUtils.isWifiOn(this) -> {
@@ -79,6 +95,7 @@ class SendActivity : AppCompatActivity() {
                 },2000)
             }
         }
+
         if (updated){
                 if (host){ initHosts() }
                 else{ initClients() }
@@ -87,7 +104,12 @@ class SendActivity : AppCompatActivity() {
                 if (host){ handleHost()
                 }else{ handleClient() }
             }
+            findViewById<MaterialButton>(R.id.send_receive_button).setOnClickListener {
+                showReceivingSending()
+            }
         }
+
+        setUpReceivingSending()
     }
 
     private fun initHosts(){
@@ -109,21 +131,18 @@ class SendActivity : AppCompatActivity() {
 
         Thread{
             while (true){
-                Thread.sleep(1000)
+                Thread.sleep(10000)
                 runOnUiThread {
                     Log.e("omo wtf","is happening inside loop ${host1?.getSending()} ${host2?.getReceiving()}")
                     if (host1!=null){
-                        val adapter = sendListFragment.getSendingAdapter()
-                        if (adapter.getData()==host1?.getSending()){
-                            adapter.updateData(host1?.getSending())
+                        if (sendingAdapter.getData()==host1?.getSending()){
+                            sendingAdapter.updateData(host1?.getSending())
                         }
                     }
                     if (host2!=null){
-                        val adapter = receiveListFragment.getReceivingAdapter()
-                        if (adapter.getData()==host2?.getReceiving()){
-                            adapter.updateData(host2?.getReceiving())
+                        if (receivingAdapter.getData()==host2?.getReceiving()){
+                            receivingAdapter.updateData(host2?.getReceiving())
                         }
-
                     }
                 }
             }
@@ -156,27 +175,24 @@ class SendActivity : AppCompatActivity() {
                         port = networkUtils.getPort()+1
                     )
                     break
-                }catch (e : Exception){
-
-                }
+                }catch (e : Exception){}
             }
         }.start()
 
         Thread{
             while (true){
-                Thread.sleep(1000)
+                Thread.sleep(10000)
                 runOnUiThread {
                     Log.e("omo wtf","is happening inside loop ${client2?.getSending()} ${client1?.getReceiving()}")
                     if (client1!=null){
-                        val adapter = sendListFragment.getSendingAdapter()
-                        if (adapter.getData()!=client2?.getSending()){
-                            adapter.updateData(client2?.getSending())
+
+                        if (sendingAdapter.getData()!=client2?.getSending()){
+                            sendingAdapter.updateData(client2?.getSending())
                         }
                     }
                     if (client2!=null){
-                        val adapter = receiveListFragment.getReceivingAdapter()
-                        if (adapter.getData()!=client1?.getReceiving()){
-                            adapter.updateData(client1?.getReceiving())
+                        if (receivingAdapter.getData()!=client1?.getReceiving()){
+                            receivingAdapter.updateData(client1?.getReceiving())
                         }
                     }
                 }
@@ -192,6 +208,7 @@ class SendActivity : AppCompatActivity() {
                 findViewById<MaterialButton>(R.id.sentItems).text=
                     "SEND(${sizeOfThingsToSend()})"
                 sectionsPagerAdapter.clearTracker()
+                showReceivingSending()
             }
             host1?.updateSendingItems(ts)
             host1?.send(ts)
@@ -207,6 +224,7 @@ class SendActivity : AppCompatActivity() {
                 findViewById<MaterialButton>(R.id.sentItems).text=
                     "SEND(${sizeOfThingsToSend()})"
                 sectionsPagerAdapter.clearTracker()
+                showReceivingSending()
             }
             client2?.updateSendingItems(ts)
             client2?.send(ts)
@@ -222,8 +240,8 @@ class SendActivity : AppCompatActivity() {
         if (thingsToSend.contains(item)){
             thingsToSend.remove(item)
         }
-
     }
+
     fun sizeOfThingsToSend():Int{
         return thingsToSend.size
     }
@@ -245,7 +263,6 @@ class SendActivity : AppCompatActivity() {
         return  result
     }
 
-
     private fun mkdir(){
         val f = File("/sdcard/Tensõ/")
         if (!f.exists()){
@@ -254,6 +271,102 @@ class SendActivity : AppCompatActivity() {
                 val subFolder = File("${f.absolutePath}/${it}/")
                 subFolder.mkdir()
             }
+        }
+    }
+
+    private fun showReceivingSending(){
+        val alert: AlertDialog.Builder = AlertDialog.Builder(this,R.style.PauseDialog)
+        val linearLayoutManager1 = LinearLayoutManager(this)
+        sendingReceivingView.findViewById<RecyclerView>(R.id.sending_list).apply {
+            layoutManager = linearLayoutManager1
+            adapter = sendingAdapter
+        }
+
+        val linearLayoutManager2 = LinearLayoutManager(this)
+        sendingReceivingView.findViewById<RecyclerView>(R.id.receiving_list).apply {
+            layoutManager = linearLayoutManager2
+            adapter = receivingAdapter
+        }
+
+        alert.setView(sendingReceivingView)
+        alert.setNegativeButton("Hide") { dialog, _ -> dialog.cancel() }
+
+        if (sendingReceivingView.parent!=null)
+            (sendingReceivingView.parent as ViewGroup).removeView(sendingReceivingView)
+
+        val dialog=alert.show()
+        dialog.window?.setBackgroundDrawableResource(R.color.colorWhite)
+        val closeBtn = dialog.getButton(AlertDialog.BUTTON_NEGATIVE)
+        closeBtn.textSize = 20f
+        closeBtn.setTextColor(resources.getColor(R.color.colorPrimaryDark))
+    }
+
+    private fun setUpReceivingSending(){
+        val receiving = sendingReceivingView.findViewById<TextView>(R.id.receiving_text)
+        val sending = sendingReceivingView.findViewById<TextView>(R.id.sending_text)
+
+        sending.setOnClickListener { updateSending() }
+        receiving.setOnClickListener { updateReceiving() }
+    }
+
+    private fun updateSending(){
+        val receivingViewIndicator = sendingReceivingView.findViewById<ImageView>(R.id.receiving_indicator)
+        val rvSending = sendingReceivingView.findViewById<RecyclerView>(R.id.sending_list)
+        val rvReceiving =  sendingReceivingView.findViewById<RecyclerView>(R.id.receiving_list)
+
+        rvSending.apply {
+            adapter= sendingAdapter
+            layoutManager = LinearLayoutManager(this@SendActivity)
+        }
+
+        val sendingViewIndicator = sendingReceivingView.findViewById<ImageView>(R.id.sending_indicator)
+
+        sendingViewIndicator.visibility = View.VISIBLE
+        rvSending.visibility= View.VISIBLE
+        receivingViewIndicator.visibility = View.INVISIBLE
+        rvReceiving.visibility =View.GONE
+    }
+
+    private fun updateReceiving(){
+        val receivingViewIndicator = sendingReceivingView.findViewById<ImageView>(R.id.receiving_indicator)
+        val rvSending = sendingReceivingView.findViewById<RecyclerView>(R.id.sending_list)
+        val rvReceiving =  sendingReceivingView.findViewById<RecyclerView>(R.id.receiving_list)
+        val sendingViewIndicator = sendingReceivingView.findViewById<ImageView>(R.id.sending_indicator)
+
+        rvReceiving.apply {
+            adapter= receivingAdapter
+            layoutManager = LinearLayoutManager(this@SendActivity)
+        }
+
+        receivingViewIndicator.visibility = View.VISIBLE
+        rvReceiving.visibility =View.VISIBLE
+        sendingViewIndicator.visibility = View.INVISIBLE
+        rvSending.visibility= View.GONE
+    }
+
+    inner class gestureDetector : GestureDetector.SimpleOnGestureListener() {
+        override fun onDown(me: MotionEvent): Boolean {
+            return true
+        }
+        override fun onScroll(
+            e1: MotionEvent?,
+            e2: MotionEvent?,
+            distanceX: Float,
+            distanceY: Float
+        ): Boolean {
+            if (System.currentTimeMillis()-lastScroll<500){
+                return false
+            }
+            if (e1?.x?.minus(e2?.x!!) ?: 0f > MIN_SWIPPING_DISTANCE)
+            {
+                updateReceiving()
+            }
+            else if (e2?.x?.minus(e1?.x!!) ?: 0f > MIN_SWIPPING_DISTANCE)
+            {
+                updateSending()
+            }
+            lastScroll = System.currentTimeMillis()
+            return false
         }
     }
 }

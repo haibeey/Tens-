@@ -55,9 +55,6 @@ class Broker(private val socket : Socket,
         itemsToSend = IS
     }
     fun send(IS : ArrayList<TransferFile>){
-        (context as Activity).runOnUiThread {
-            Log.e("sending here",socket.toString())
-        }
         itemsToSend = IS
         itemsToSend.forEach {
             sending.add(
@@ -115,10 +112,9 @@ class Broker(private val socket : Socket,
                 val sb = fileReader.take(goingToSend)
 
                 sending[index].sizeSent+=sb.size
-                data.put(sb)
                 dataSize-=sb.size
                 outPutStream.write(
-                    data.array()
+                    sb
                 )
             }
             index++
@@ -160,9 +156,7 @@ class Broker(private val socket : Socket,
 
     fun receive(){
         var index = 0
-        (context as Activity).runOnUiThread {
-            Log.e("just see here",socket.toString())
-        }
+
         while (socket.isConnected){
             val inputStream = socket.getInputStream()
             val sizeByteArr = ByteArray(4)
@@ -211,6 +205,7 @@ class Broker(private val socket : Socket,
                         receiving[index].sizeSent+=sizeRead
                         entity.entitySize-=sizeRead
                     }
+                    fileWriter.finish()
                     index++
                     if(index>=receiving.size){
                         finishReceiving = true

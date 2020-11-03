@@ -34,6 +34,18 @@
 
         </LinearLayout>
         <com.google.android.material.button.MaterialButton
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            app:iconSize="24dp"
+            android:background="@drawable/capsule_like"
+            app:iconGravity="textStart"
+            android:id="@+id/send_receive_button"
+            android:layout_marginLeft="@dimen/fab_margin"
+            android:layout_alignRight="@+id/content_main"
+            android:layout_centerInParent="true"
+            android:layout_alignEnd="@+id/content_main"
+            android:layout_marginStart="@dimen/fab_margin" />
+        <com.google.android.material.button.MaterialButton
             android:layout_width="wrap_content"
             android:background="@color/colorPrimary"
             android:gravity="center"

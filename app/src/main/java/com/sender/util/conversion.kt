@@ -42,6 +42,9 @@ class conversion {
         private fun removeDecimal(value : Int):String{
             return value.toString().split(".")[0]
         }
+        private fun removeDecimalLong(value : Long):String{
+            return value.toString().split(".")[0]
+        }
         fun byteToMb(bytes : Int):String{
             return if (bytes>1024*1024*1024){
                 "${removeDecimal((bytes/(1024*1024*1024)))}gb"
@@ -49,6 +52,18 @@ class conversion {
                 "${removeDecimal((bytes/(1024*1024)))}mb"
             }else if(bytes>1024){
                 "${removeDecimal((bytes/(1024)))}kb"
+            }else{
+                "${bytes}b"
+            }
+        }
+
+        fun byteToMbLong(bytes : Long):String{
+            return if (bytes>1024*1024*1024){
+                "${removeDecimalLong((bytes/(1024*1024*1024)))}gb"
+            }else if (bytes>1024*1024){
+                "${removeDecimalLong((bytes/(1024*1024)))}mb"
+            }else if(bytes>1024){
+                "${removeDecimalLong((bytes/(1024)))}kb"
             }else{
                 "${bytes}b"
             }

@@ -11,23 +11,17 @@ import com.sender.ui.send.fragments.audio.AudioList
 import com.sender.ui.send.fragments.docs.DocumentList
 import com.sender.ui.send.fragments.images.ImageList
 import com.sender.ui.send.fragments.videos.VideoList
-import com.sender.ui.send.fragments.received.ReceiveList
-import com.sender.ui.send.fragments.sents.SentList
 
 private val TAB_TITLES = arrayOf(
     R.string.tab_text_1,
     R.string.tab_text_2,
     R.string.tab_text_3,
     R.string.tab_text_4,
-    R.string.tab_text_5,
-    R.string.tab_text_6,
-    R.string.tab_text_7
+    R.string.tab_text_5
 )
 
 class SectionsPagerAdapter(private val context: Context,
-                           fm: FragmentManager,
-                           private val sentList: SentList,
-                           private val receiveList: ReceiveList
+                           fm: FragmentManager
 ) :
     FragmentPagerAdapter(fm) {
 
@@ -53,12 +47,6 @@ class SectionsPagerAdapter(private val context: Context,
             }
             4->{
                 return audioList
-            }
-            5->{
-                return sentList
-            }
-            6->{
-                return receiveList
             }
             else->{
                 return PlaceholderFragment.newInstance(position + 1)

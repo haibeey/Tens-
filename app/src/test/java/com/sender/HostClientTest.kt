@@ -36,20 +36,26 @@ class HostClientTest {
         val context: Context = ApplicationProvider.getApplicationContext()
 
         FileUtils.dir = "src/"
-
-        val file = File("src/test/java/com/sender/DualSpace.apk")
-
         val tfs = ArrayList<TransferFile>()
 
-        tfs.add(
-            TransferFile(
-                name = "DualSpace.apk",
-                uri = Uri.fromFile(file),
-                size = FileUtils.fetchFileSize(Uri.fromFile(file),context),
-                type = "apk",
-                mimeType = ""
+        val typeOfFile = arrayOf("apk","apk","image","audio","video")
+
+        var pos = 0
+        arrayOf("a.in","DualSpace.apk","ab.jpg","audio.mp3","video.mp4").forEach {
+            val file = File("src/test/java/com/sender/${it}")
+
+            tfs.add(
+                TransferFile(
+                    name = file.name,
+                    uri = Uri.fromFile(file),
+                    size = FileUtils.fetchFileSize(Uri.fromFile(file),context),
+                    type = typeOfFile[pos],
+                    mimeType = ""
+                )
             )
-        )
+            pos++
+        }
+
         val result =ArrayList<TransferFile>()
         tfs.forEach {
             result.add(it)
@@ -74,7 +80,12 @@ class HostClientTest {
         thread2.join()
 
         Assert.assertEquals("${c.getBroker()?.failedSending()!!}","false")
-        Utils.printItems(file.length(),File("src/DualSpace.apk").length(),FileUtils.fetchFileSize(Uri.fromFile(file),context))
-        Assert.assertTrue(file.length()==File("src/DualSpace.apk").length())
+
+        arrayOf("a.in","DualSpace.apk","ab.jpg","audio.mp3","video.mp4").forEach {
+            val file = File("src/test/java/com/sender/${it}")
+            Utils.printItems(file.length(),File("src/${it}").length(),FileUtils.fetchFileSize(Uri.fromFile(file),context))
+            Assert.assertTrue(file.length()==File("src/${it}").length())
+        }
+
     }
 }

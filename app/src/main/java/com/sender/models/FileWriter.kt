@@ -14,8 +14,6 @@ class FileWriter(val name: String,mimeType: String,context : Context){
     init {
         val file = File(folderPath+name)
 
-        Utils.printItems(file.name,file.absolutePath)
-
         file.createNewFile()
 
         stream = file.outputStream()
@@ -26,6 +24,9 @@ class FileWriter(val name: String,mimeType: String,context : Context){
       stream?.write(bytes)
     }
 
+    fun finish(){
+        stream?.close()
+    }
     private fun getFolderPath(mimeType: String):String{
         var folder = FileUtils.dir
         when (mimeType){

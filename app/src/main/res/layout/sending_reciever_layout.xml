@@ -1,0 +1,92 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.send.SendActivity"
+    android:background="@color/colorWhite"
+    android:paddingTop="@dimen/fab_margin">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:orientation="vertical"
+        android:id="@+id/linear_layout_view"
+        android:layout_height="match_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="@dimen/fab_margin">
+            <LinearLayout
+                android:id="@+id/title_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginBottom="@dimen/fab_margin">
+                <TextView
+                    android:id="@+id/sending_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Sending"
+                    android:textSize="@dimen/fab_margin"
+                    android:textAlignment="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center_horizontal" />
+                <TextView
+                    android:id="@+id/receiving_text"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:text="Receiving"
+                    android:textSize="@dimen/fab_margin"
+                    android:textAlignment="center"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:background="?attr/selectableItemBackgroundBorderless"
+                    android:gravity="center_horizontal" />
+            </LinearLayout>
+            <ImageView
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_below="@id/title_layout"
+                android:src="@drawable/horizontal_line_gray"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/title_layout">
+                <ImageView
+                    android:id="@+id/sending_indicator"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/horizontal_line_lilac"
+                    android:layout_marginStart="@dimen/fab_margin"
+                    android:layout_marginEnd="@dimen/fab_margin"/>
+                <ImageView
+                    android:id="@+id/receiving_indicator"
+                    android:layout_width="0dp"
+                    android:layout_height="2dp"
+                    android:layout_weight="1"
+                    android:src="@drawable/horizontal_line_lilac"
+                    android:layout_marginStart="@dimen/fab_margin"
+                    android:layout_marginEnd="@dimen/fab_margin"
+                    android:visibility="invisible"/>
+            </LinearLayout>
+        </RelativeLayout>
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/sending_list"
+            android:layout_height="wrap_content"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_width="match_parent"
+            android:id="@+id/receiving_list"
+            android:visibility="gone"
+            android:layout_height="wrap_content"/>
+
+    </LinearLayout>
+</RelativeLayout>
