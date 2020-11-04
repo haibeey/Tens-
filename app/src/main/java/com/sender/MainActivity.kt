@@ -27,6 +27,7 @@ import java.lang.reflect.Method
 import java.net.InetSocketAddress
 import java.net.ServerSocket
 import java.net.Socket
+import java.net.SocketAddress
 import java.util.*
 
 
@@ -49,8 +50,6 @@ class MainActivity : AppCompatActivity() {
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
         ),100)
-
-        Log.e("wtf","na")
 
         val img = findViewById<MaterialButton>(R.id.start)
         scaleDown = AnimationUtils.loadAnimation(
@@ -118,6 +117,8 @@ class MainActivity : AppCompatActivity() {
                     val s = Socket()
                     try {
                         s.reuseAddress =true
+
+                        s.bind(InetSocketAddress(networkUtils.getDeviceIpAddress(), s.port))
                         s.connect(InetSocketAddress(networkUtils.getHostIpFromClient(), networkUtils.getPort()),3000)
                         connected = true
                         s.close()
@@ -126,6 +127,7 @@ class MainActivity : AppCompatActivity() {
                         return@Thread
                     }catch (e :Exception){
                         clientWaiting = true
+                        Log.e("what is happening","here ${e}")
                         continue
                     }
                     if (connected){

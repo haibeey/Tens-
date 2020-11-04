@@ -10,6 +10,7 @@ import com.bumptech.glide.Glide
 import com.sender.R
 import com.sender.models.FileTransmission
 import com.sender.ui.send.BaseViewHolder
+import com.sender.ui.send.ProgressSendingReceiving
 import com.sender.util.conversion
 
 class ReceivingAdapter() :
@@ -40,6 +41,8 @@ class ReceivingAdapter() :
         val fileTrans = dataItems[position]
         holder.itemView.findViewById<TextView>(R.id.name).text = fileTrans.name
         holder.itemView.findViewById<TextView>(R.id.percent).text = conversion.byteToMbLong(fileTrans.sizeSent)
+        val updatePercentage = ((fileTrans.sizeSent*1f)/fileTrans.sizeToSend)*100
+        (holder.itemView as ProgressSendingReceiving).updateProgress(updatePercentage)
         var drawable = R.drawable.ic_android_black_24dp
         when (fileTrans.mimeType){
             "application/vnd.android.package-archive"->{
@@ -75,6 +78,7 @@ class ReceivingAdapter() :
 
         Glide.with(holder.view)
             .load(drawable)
+            .fitCenter()
             .into(holder.view.findViewById(R.id.img_file_type))
     }
 }

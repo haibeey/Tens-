@@ -12,7 +12,7 @@ import java.net.Socket
 import java.nio.ByteBuffer
 import java.nio.charset.Charset
 
-const val MAX_BYTE_SEND_RECEIVE_SIZE = 1000000
+const val MAX_BYTE_SEND_RECEIVE_SIZE = 10000000
 
 class Broker(private val socket : Socket,
              var itemsToSend : ArrayList<TransferFile>,
@@ -108,7 +108,6 @@ class Broker(private val socket : Socket,
                 if (dataSize<MAX_BYTE_SEND_RECEIVE_SIZE){
                     goingToSend = dataSize.toInt()
                 }
-                data = ByteBuffer.allocate(goingToSend)
                 val sb = fileReader.take(goingToSend)
 
                 sending[index].sizeSent+=sb.size

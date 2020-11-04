@@ -40,6 +40,8 @@ class SendingAdapters() :
         val fileTrans = dataItems[position]
         holder.itemView.findViewById<TextView>(R.id.name).text = fileTrans.name
         holder.itemView.findViewById<TextView>(R.id.percent).text = conversion.byteToMbLong(fileTrans.sizeSent)
+        val updatePercentage = ((fileTrans.sizeSent*1f)/fileTrans.sizeToSend)*100
+        (holder.itemView as ProgressSendingReceiving).updateProgress(updatePercentage)
 
         var drawable = R.drawable.ic_android_black_24dp
         when (fileTrans.mimeType){
@@ -76,6 +78,7 @@ class SendingAdapters() :
 
         Glide.with(holder.view)
             .load(drawable)
+            .fitCenter()
             .into(holder.view.findViewById(R.id.img_file_type))
     }
 }

@@ -2,10 +2,8 @@ package com.sender.ui.send
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.ImageView
-import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -19,7 +17,6 @@ import com.google.android.material.tabs.TabLayout
 import com.sender.R
 import com.sender.client.Client
 import com.sender.host.Host
-import com.sender.models.FileTransmission
 import com.sender.models.TransferFile
 import com.sender.ui.send.fragments.received.ReceivingAdapter
 import com.sender.ui.send.fragments.sents.SendingAdapters
@@ -131,9 +128,8 @@ class SendActivity : AppCompatActivity() {
 
         Thread{
             while (true){
-                Thread.sleep(10000)
+                Thread.sleep(1000)
                 runOnUiThread {
-                    Log.e("omo wtf","is happening inside loop ${host1?.getSending()} ${host2?.getReceiving()}")
                     if (host1!=null){
                         if (sendingAdapter.getData()==host1?.getSending()){
                             sendingAdapter.updateData(host1?.getSending())
@@ -181,9 +177,8 @@ class SendActivity : AppCompatActivity() {
 
         Thread{
             while (true){
-                Thread.sleep(10000)
+                Thread.sleep(1000)
                 runOnUiThread {
-                    Log.e("omo wtf","is happening inside loop ${client2?.getSending()} ${client1?.getReceiving()}")
                     if (client1!=null){
 
                         if (sendingAdapter.getData()!=client2?.getSending()){

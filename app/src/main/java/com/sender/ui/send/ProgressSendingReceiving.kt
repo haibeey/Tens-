@@ -17,7 +17,7 @@ class ProgressSendingReceiving @JvmOverloads constructor(
 ) : CardView(context, attrs, defStyleAttr) {
 
     private var progressColor = R.color.faintPrimary
-    private var bgProgress = 80
+    private var bgProgress = 0f
     private val rectF = RectF()
     private val paint = Paint()
 
@@ -48,8 +48,8 @@ class ProgressSendingReceiving @JvmOverloads constructor(
 
     }
 
-    fun updateProgress(progress : Int){
-        if (progress<0)bgProgress=0
+    fun updateProgress(progress : Float){
+        if (progress<0)bgProgress=0f
         if (progress>100)bgProgress=progress
         bgProgress=progress
         invalidate()
