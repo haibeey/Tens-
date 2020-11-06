@@ -1,8 +1,12 @@
 package com.sender.util
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.net.Network
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.text.format.Formatter.formatIpAddress
+import androidx.annotation.RequiresApi
 import java.lang.reflect.Method
 import java.net.InetAddress
 import java.net.NetworkInterface
@@ -41,6 +45,20 @@ class networkUtils {
             return  "0.0.0.0"
         }
 
+        @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
+        fun findWlanNetwork(context: Context): Network? {
+            val connectivityManager =
+                context.getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            val etherNetwork: Network? = null
+            for (network in connectivityManager.allNetworks) {
+                val networkInfo = connectivityManager.getNetworkInfo(network)
+                if (networkInfo.type == ConnectivityManager.TYPE_WIFI) {
+                    return network
+                }
+            }
+            return null
+        }
+
         fun getHostIpFromClient():String{
             val ip = getDeviceIpAddress()
             if (ip == "0.0.0.0"){
@@ -50,6 +68,7 @@ class networkUtils {
             ipSplit = ipSplit.subList(0,ipSplit.size-1)
             return  "${ipSplit.joinToString(".")}.1"
         }
+
         fun isMobileHotspot(context: Context): Boolean {
             val manager = (context.applicationContext.getSystemService(Context.WIFI_SERVICE) as WifiManager)
             try {

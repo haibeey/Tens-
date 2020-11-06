@@ -159,12 +159,6 @@ class AudioList : Fragment() {
         return viewLayout
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        tracker?.onSaveInstanceState(outState)
-        outState.putSerializable("audio_data",audioList)
-    }
-
     fun clearTracker(){
         try {
             viewAdapter.tracker?.clearSelection()

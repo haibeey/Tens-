@@ -1,7 +1,10 @@
 package com.sender.ui.send
 
 import android.content.Context
+import android.net.ConnectivityManager
+import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import android.widget.ImageView
 import android.widget.TextView
@@ -17,6 +20,7 @@ import com.google.android.material.tabs.TabLayout
 import com.sender.R
 import com.sender.client.Client
 import com.sender.host.Host
+import com.sender.models.FileTransmission
 import com.sender.models.TransferFile
 import com.sender.ui.send.fragments.received.ReceivingAdapter
 import com.sender.ui.send.fragments.sents.SendingAdapters
@@ -53,6 +57,11 @@ class SendActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_send)
+
+        if (Build.VERSION.SDK_INT> Build.VERSION_CODES.M){
+            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            connectivityManager.bindProcessToNetwork(networkUtils.findWlanNetwork(this))
+        }
 
         val viewPager: ViewPager = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
@@ -128,15 +137,17 @@ class SendActivity : AppCompatActivity() {
 
         Thread{
             while (true){
-                Thread.sleep(1000)
-                runOnUiThread {
-                    if (host1!=null){
-                        if (sendingAdapter.getData()==host1?.getSending()){
+                Thread.sleep(2000)
+                if (host1!=null && host1?.getSending()!=null ){
+                    if (equalFileTransList(sendingAdapter.getData(),host1?.getSending()!!)){
+                        runOnUiThread {
                             sendingAdapter.updateData(host1?.getSending())
                         }
                     }
-                    if (host2!=null){
-                        if (receivingAdapter.getData()==host2?.getReceiving()){
+                }
+                if (host2!=null && host2?.getReceiving()!=null){
+                    if (equalFileTransList(receivingAdapter.getData(),host2?.getReceiving()!!)){
+                        runOnUiThread {
                             receivingAdapter.updateData(host2?.getReceiving())
                         }
                     }
@@ -177,16 +188,17 @@ class SendActivity : AppCompatActivity() {
 
         Thread{
             while (true){
-                Thread.sleep(1000)
-                runOnUiThread {
-                    if (client1!=null){
-
-                        if (sendingAdapter.getData()!=client2?.getSending()){
+                Thread.sleep(2000)
+                if (client2!=null && client2?.getSending()!=null){
+                    if (equalFileTransList(sendingAdapter.getData(),client2?.getSending()!!)){
+                        runOnUiThread {
                             sendingAdapter.updateData(client2?.getSending())
                         }
                     }
-                    if (client2!=null){
-                        if (receivingAdapter.getData()!=client1?.getReceiving()){
+                }
+                if (client1!=null && client1?.getReceiving()!=null){
+                    if (equalFileTransList(receivingAdapter.getData(),client1?.getReceiving()!!)){
+                        runOnUiThread {
                             receivingAdapter.updateData(client1?.getReceiving())
                         }
                     }
@@ -363,5 +375,17 @@ class SendActivity : AppCompatActivity() {
             lastScroll = System.currentTimeMillis()
             return false
         }
+    }
+
+    private fun equalFileTransList(a: ArrayList<FileTransmission>,b: ArrayList<FileTransmission>):Boolean{
+        if (a.size!=b.size)return false
+        val aSet = setOf<Int>()
+        a.forEach {
+            aSet.plus(it.hashCode())
+        }
+        b.forEach {
+            if (aSet.contains(it.hashCode()))return false
+        }
+        return true
     }
 }

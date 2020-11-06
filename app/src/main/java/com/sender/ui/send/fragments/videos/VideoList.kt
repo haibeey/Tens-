@@ -37,7 +37,9 @@ class VideoList : Fragment() {
         val viewAdapter = VideoListAdapter(ArrayList())
 
         if (savedInstanceState != null) {
-            tracker?.onRestoreInstanceState(savedInstanceState);
+            try {
+                tracker?.onRestoreInstanceState(savedInstanceState)
+            }catch (e :Exception){}
         }
 
         fun loadData(){
@@ -120,12 +122,6 @@ class VideoList : Fragment() {
             viewAdapter.tracker = tracker
         }
         return viewLayout
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        tracker?.onSaveInstanceState(outState)
-        outState.putSerializable("video_data",videoList)
     }
 
     fun clearTracker(){

@@ -53,7 +53,7 @@ class DocListAdapter(private val docList: ArrayList<RvDocItems>) :
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val rvItems = docList[position]
 
-        holder.itemView.findViewById<TextView>(R.id.name).text = Utils.stripAudioName(rvItems.name)
+        holder.itemView.findViewById<TextView>(R.id.name).text = Utils.cutShort(rvItems.name)
 
         Glide.with(holder.view)
             .load(rvItems.uri)

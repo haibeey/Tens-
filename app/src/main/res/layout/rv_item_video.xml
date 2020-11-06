@@ -1,45 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView
     android:layout_width="wrap_content"
-    android:padding="10dp"
-    android:layout_height="wrap_content">
-    <com.google.android.material.imageview.ShapeableImageView
-        android:layout_width="250dp"
-        android:id="@+id/image_button"
-        android:layout_gravity="center"
-        android:background="@android:color/transparent"
-        android:scaleType="centerCrop"
-        android:layout_height="100dp"
-        android:layout_margin="2dp"
-        android:contentDescription="@string/todo" />
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/video_name"
+    android:layout_height="wrap_content"
+    android:layout_margin="5dp"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_gravity="start|bottom"
-        android:textSize="16sp"
-        android:textColor="@color/colorWhite"
-        android:padding="2dp"
-        android:layout_alignBottom="@+id/image_button"
-        android:layout_height="wrap_content" />
+        android:orientation="vertical"
+        android:layout_height="wrap_content">
+        <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+            <ImageView
+                android:layout_width="match_parent"
+                android:id="@+id/image_button"
+                android:layout_gravity="center"
+                android:background="@android:color/transparent"
+                android:scaleType="centerCrop"
+                android:layout_height="150dp"
+                android:src="@drawable/capsule_like"
+                android:contentDescription="@string/todo" />
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_gravity="end|top"
+                android:id="@+id/vid_selected"
+                android:layout_alignRight="@+id/image_button"
+                android:background="@drawable/video_item_selected"
+                android:layout_height="wrap_content"
+                android:padding="5dp"
+                android:layout_alignEnd="@+id/image_button"
+                android:contentDescription="@string/todo" />
+        </RelativeLayout>
 
-    <com.google.android.material.textview.MaterialTextView
-        android:id="@+id/video_size"
-        android:layout_width="wrap_content"
-        android:textSize="12sp"
-        android:layout_gravity="start|top"
-        android:textColor="@color/colorWhite"
-        android:padding="2dp"
-        android:layout_alignTop="@+id/image_button"
-        android:layout_height="wrap_content" />
-    <ImageView
-        android:layout_width="wrap_content"
-        android:layout_gravity="end|top"
-        android:id="@+id/vid_selected"
-        android:layout_alignRight="@+id/image_button"
-        android:background="@drawable/video_item_selected"
-        android:layout_height="wrap_content"
-        android:padding="2dp"
-        android:layout_alignEnd="@+id/image_button"
-        android:contentDescription="@string/todo" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:orientation="vertical"
+            android:layout_height="wrap_content">
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/video_name"
+                android:layout_width="wrap_content"
+                android:textSize="16sp"
+                android:text="text"
+                android:textColor="@color/colorPrimaryDark"
+                android:padding="3dp"
+                android:layout_height="wrap_content" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/video_size"
+                android:layout_width="wrap_content"
+                android:textSize="12sp"
+                android:text="text"
+                android:textColor="@color/colorPrimaryDarkLessTrans"
+                android:padding="3dp"
+                android:layout_height="wrap_content" />
 
-</RelativeLayout>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</androidx.cardview.widget.CardView>

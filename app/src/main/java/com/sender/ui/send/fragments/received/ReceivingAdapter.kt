@@ -11,6 +11,7 @@ import com.sender.R
 import com.sender.models.FileTransmission
 import com.sender.ui.send.BaseViewHolder
 import com.sender.ui.send.ProgressSendingReceiving
+import com.sender.util.Utils
 import com.sender.util.conversion
 
 class ReceivingAdapter() :
@@ -39,7 +40,7 @@ class ReceivingAdapter() :
 
     override fun onBindViewHolder(holder: BaseViewHolder, position: Int) {
         val fileTrans = dataItems[position]
-        holder.itemView.findViewById<TextView>(R.id.name).text = fileTrans.name
+        holder.itemView.findViewById<TextView>(R.id.name).text = Utils.cutShort(fileTrans.name)
         holder.itemView.findViewById<TextView>(R.id.percent).text = conversion.byteToMbLong(fileTrans.sizeSent)
         val updatePercentage = ((fileTrans.sizeSent*1f)/fileTrans.sizeToSend)*100
         (holder.itemView as ProgressSendingReceiving).updateProgress(updatePercentage)

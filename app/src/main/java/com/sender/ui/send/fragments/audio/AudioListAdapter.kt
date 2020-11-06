@@ -78,12 +78,12 @@ class AudioListAdapter(private val imageList: ArrayList<RvAudioItems>) :
             holder.itemView.isActivated=selected
             val activity = (holder.view.context as SendActivity)
             if (selected){
-                TransferFile(uri = rvItems.uri!!,
+                activity.addToThingsToSend(TransferFile(uri = rvItems.uri!!,
                     name = rvItems.name!!,
                     size = FileUtils.fetchFileSize(rvItems.uri!!,holder.itemView.context),
                     type = "audio",
                     mimeType = rvItems.mimeType!!
-                )
+                ))
             }else{
                 activity.removeFromThingsToSend(
                     TransferFile(uri = rvItems.uri!!,

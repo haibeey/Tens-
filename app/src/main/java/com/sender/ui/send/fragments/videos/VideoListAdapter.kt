@@ -53,7 +53,7 @@ class VideoListAdapter(private val videoList: ArrayList<RvVideosItems>) :
         Glide.with(holder.view)
             .load(rvItems.uri)
             .into(holder.view.findViewById(R.id.image_button))
-        holder.view.findViewById<TextView>(R.id.video_name).text = rvItems.name
+        holder.view.findViewById<TextView>(R.id.video_name).text = Utils.removeExt(rvItems.name)
         holder.view.findViewById<TextView>(R.id.video_size).text = conversion.byteToMb(rvItems.size)
 
         tracker?.let {

@@ -35,6 +35,18 @@ class Utils{
             if (string==null)return  ""
             return string
         }
+
+        fun cutShort(string: String?):String{
+            if (string==null)return ""
+            if (string.length<=10)return string
+            return "${string.substring(0 until 11)}.."
+        }
+
+        fun removeExt(string: String?):String{
+            if (string==null)return ""
+            if (string.length<=4)return string
+            return string.substring(0 until string.length-4)
+        }
     }
 
 }

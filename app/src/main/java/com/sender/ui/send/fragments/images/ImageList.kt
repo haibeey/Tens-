@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.SeekBar
 import android.widget.SeekBar.OnSeekBarChangeListener
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.selection.SelectionPredicates
 import androidx.recyclerview.selection.SelectionTracker
@@ -20,7 +19,6 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.sender.R
 import com.sender.ui.send.ItemSelection
-import com.sender.ui.send.fragments.audio.RvAudioItems
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -39,7 +37,9 @@ class ImageList : Fragment(){
 
 
         if (savedInstanceState != null) {
-            tracker?.onRestoreInstanceState(savedInstanceState);
+            try {
+                tracker?.onRestoreInstanceState(savedInstanceState)
+            }catch (e :Exception){}
         }
 
         viewLayout.findViewById<SeekBar>(R.id.seek_bar).setOnSeekBarChangeListener(object :
@@ -142,12 +142,6 @@ class ImageList : Fragment(){
             viewAdapter.tracker = tracker
         }
         return viewLayout
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        tracker?.onSaveInstanceState(outState);
-        outState.putSerializable("image_data",imageList)
     }
 
     fun clearTracker(){

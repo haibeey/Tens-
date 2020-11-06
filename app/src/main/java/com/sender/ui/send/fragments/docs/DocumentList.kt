@@ -33,7 +33,9 @@ class DocumentList : Fragment() {
         val viewManager = LinearLayoutManager(context)
 
         if (savedInstanceState != null) {
-            tracker?.onRestoreInstanceState(savedInstanceState);
+            try {
+                tracker?.onRestoreInstanceState(savedInstanceState)
+            }catch (e :Exception){}
         }
 
         fun loadData(){
@@ -112,7 +114,6 @@ class DocumentList : Fragment() {
                 try {
                     docList =
                         savedInstanceState.getSerializable("doc_data") as ArrayList<RvDocItems>
-                    Log.e("what",docList.toString())
                 }catch (e : java.lang.Exception){
                     loadData()
                 }
@@ -136,12 +137,6 @@ class DocumentList : Fragment() {
             viewAdapter.tracker = tracker
         }
         return viewLayout
-    }
-
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        tracker?.onSaveInstanceState(outState)
-        outState.putSerializable("doc_data",docList)
     }
 
 

@@ -13,6 +13,7 @@ import com.sender.models.TransferFile
 import com.sender.ui.send.BaseViewHolder
 import com.sender.ui.send.SendActivity
 import com.sender.util.FileUtils
+import com.sender.util.Utils
 
 
 class AppListAdapter(private val appList: ArrayList<RvAppItems>) :
@@ -63,7 +64,7 @@ class AppListAdapter(private val appList: ArrayList<RvAppItems>) :
             .load(icon)
             .fitCenter()
             .into(holder.view.findViewById(R.id.image_button))
-        holder.view.findViewById<TextView>(R.id.app_name).text = rvItems.appName
+        holder.view.findViewById<TextView>(R.id.app_name).text = Utils.removeExt(rvItems.appName)
 
         tracker?.let {
             val selected = tracker!!.isSelected(position.toLong())

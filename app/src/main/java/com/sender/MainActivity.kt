@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.net.ConnectivityManager
 import android.net.wifi.WifiManager
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -46,6 +47,11 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+        if (Build.VERSION.SDK_INT>Build.VERSION_CODES.M){
+            val connectivityManager = getSystemService(Context.CONNECTIVITY_SERVICE) as ConnectivityManager
+            connectivityManager.bindProcessToNetwork(networkUtils.findWlanNetwork(this))
+        }
+
         requestPermission(arrayOf(
             Manifest.permission.READ_EXTERNAL_STORAGE,
             Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -59,6 +65,10 @@ class MainActivity : AppCompatActivity() {
         scaleDown.repeatCount = Animation.INFINITE
         img.startAnimation(scaleDown)
 
+        val startButton = findViewById<MaterialButton>(R.id.start_button)
+        startButton.setOnClickListener(View.OnClickListener {
+            startActivity(Intent(this, SendActivity::class.java))
+        })
         startConnecting()
 
     }
@@ -69,9 +79,6 @@ class MainActivity : AppCompatActivity() {
         ActivityCompat.requestPermissions(this, permission, requestCode)
         return true
     }
-
-
-
     private fun makeConnection(){
         if (connected)return
         if (hostWaiting)return
@@ -117,7 +124,6 @@ class MainActivity : AppCompatActivity() {
                     val s = Socket()
                     try {
                         s.reuseAddress =true
-
                         s.bind(InetSocketAddress(networkUtils.getDeviceIpAddress(), s.port))
                         s.connect(InetSocketAddress(networkUtils.getHostIpFromClient(), networkUtils.getPort()),3000)
                         connected = true
@@ -127,7 +133,6 @@ class MainActivity : AppCompatActivity() {
                         return@Thread
                     }catch (e :Exception){
                         clientWaiting = true
-                        Log.e("what is happening","here ${e}")
                         continue
                     }
                     if (connected){
@@ -136,9 +141,7 @@ class MainActivity : AppCompatActivity() {
                         }
                         return@Thread
                     }
-
                 }
-
             }
         }
         if (connected)return
@@ -163,7 +166,6 @@ class MainActivity : AppCompatActivity() {
         startButton.setOnClickListener(View.OnClickListener {
             startActivity(Intent(this, SendActivity::class.java))
         })
-        startButton.isEnabled = false
         timer = Timer()
         if (connectionThreads[0]!=null){
             connectionThreads[0]?.interrupt()
@@ -195,7 +197,7 @@ class MainActivity : AppCompatActivity() {
                         networkUtils.isWifiOn(this@MainActivity) -> {
                             joinConnection()
                             start.text = getString(R.string.wifi_on) + add
-                            startButton.isEnabled = connected
+                            startButton.isEnabled = true
                         }
                         else -> {
                             start.text = getString(R.string.searching_for_network)

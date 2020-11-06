@@ -3,9 +3,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.send.SendActivity"
-    android:background="@color/colorWhite"
-    android:paddingTop="@dimen/fab_margin">
-
+    android:padding="15dp"
+    android:background="@color/colorWhite">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -14,23 +13,23 @@
         android:layout_height="match_parent">
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/fab_margin">
+            android:layout_height="wrap_content">
             <LinearLayout
                 android:id="@+id/title_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginBottom="@dimen/fab_margin">
+                android:orientation="horizontal">
                 <TextView
                     android:id="@+id/sending_text"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Sending"
-                    android:textSize="@dimen/fab_margin"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
                     android:textAlignment="center"
                     android:clickable="true"
+                    android:paddingBottom="1dp"
                     android:focusable="true"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="center_horizontal" />
@@ -40,10 +39,12 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="1"
                     android:text="Receiving"
-                    android:textSize="@dimen/fab_margin"
+                    android:textStyle="bold"
+                    android:textSize="16sp"
                     android:textAlignment="center"
                     android:clickable="true"
                     android:focusable="true"
+                    android:paddingBottom="1dp"
                     android:background="?attr/selectableItemBackgroundBorderless"
                     android:gravity="center_horizontal" />
             </LinearLayout>

@@ -37,7 +37,10 @@ class AppList : Fragment() {
         val viewManager = GridLayoutManager(context,4)
 
         if (savedInstanceState != null) {
-            tracker?.onRestoreInstanceState(savedInstanceState);
+            try {
+                tracker?.onRestoreInstanceState(savedInstanceState)
+            }catch (e :Exception){}
+
         }
 
         fun loadData(){
@@ -113,11 +116,6 @@ class AppList : Fragment() {
         return  viewLayout
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        super.onSaveInstanceState(outState)
-        tracker?.onSaveInstanceState(outState)
-        outState.putSerializable("app_data",allList)
-    }
 
     fun clearTracker(){
         try {

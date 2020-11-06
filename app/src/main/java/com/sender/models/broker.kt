@@ -23,6 +23,7 @@ class Broker(private val socket : Socket,
     private val sending = ArrayList<FileTransmission>()
     private val receiving = ArrayList<FileTransmission>()
     private var receivingFailed = false
+    var index = 0
 
     fun failedSending():Boolean{
         return receivingFailed
@@ -69,7 +70,6 @@ class Broker(private val socket : Socket,
         }
 
         sendTransferList()
-        var index = 0
         while (itemsToSend.isNotEmpty()){
             val itemSending = itemsToSend.removeAt(0)
             val itemToSend = TransferEntity(
@@ -80,7 +80,7 @@ class Broker(private val socket : Socket,
             )
             itemToSend.computeSize()
 
-            var data = ByteBuffer.allocate(itemToSend.size+2*4)
+            val data = ByteBuffer.allocate(itemToSend.size+2*4)
 
             data.put(
                 conversion.intToByteArray(
@@ -116,6 +116,7 @@ class Broker(private val socket : Socket,
                     sb
                 )
             }
+            sending[index].sizeSent=sending[index].sizeToSend
             index++
         }
     }

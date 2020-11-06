@@ -8,4 +8,5 @@
     <color name="faintPrimary">#0072A0</color>
     <color name="gray">#757575</color>
     <color name="lilac">#8050FF</color>
+    <color name="colorPrimaryDarkLessTrans">#4D72A0</color>
 </resources>
