@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.sender">
+    package="com.tenso">
 
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -21,10 +21,10 @@
         android:theme="@style/AppTheme"
         tools:targetApi="q">
         <activity
-            android:name=".ui.send.SendActivity"
+            android:name="com.tenso.ui.send.SendActivity"
             android:label="@string/title_activity_send"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity android:name=".MainActivity">
+        <activity android:name="com.tenso.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
