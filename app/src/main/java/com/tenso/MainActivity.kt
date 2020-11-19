@@ -57,7 +57,9 @@ class MainActivity : AppCompatActivity() {
         scaleDown.repeatCount = Animation.INFINITE
         img.startAnimation(scaleDown)
 
-        startConnecting()
+        try {
+            startConnecting()
+        }catch (e : Exception){}
 
     }
 

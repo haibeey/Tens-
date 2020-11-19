@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "73434671890",
+    "firebase_url": "https://tenso-f2a56.firebaseio.com",
+    "project_id": "tenso-f2a56",
+    "storage_bucket": "tenso-f2a56.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:73434671890:android:8b3b39a5ac66d71c7ca1cb",
+        "android_client_info": {
+          "package_name": "com.tenso"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "73434671890-ouqci6onpqci50gh2g3lvn2e4gl9onv6.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.tenso",
+            "certificate_hash": "50b0e507d58884a7a2a0ab29ac1f3f216d84f46a"
+          }
+        },
+        {
+          "client_id": "73434671890-hb9ome9111oc7si1g4ak9uhdc58qf6dr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBDSUuuiNI0N1P_nVbYaTdD1zmXKM5cUGA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "73434671890-hb9ome9111oc7si1g4ak9uhdc58qf6dr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

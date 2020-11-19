@@ -14,5 +14,4 @@ class BaseViewHolder(val view: View) : RecyclerView.ViewHolder(view){
                 return true
             }
         }
-
 }
